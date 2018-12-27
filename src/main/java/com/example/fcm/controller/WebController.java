@@ -18,60 +18,52 @@ import com.example.fcm.service.PushChuckJokeService;
 @RestController
 public class WebController {
 
-private final String TOPIC = "JavaSampleApproach";
-	
+
 	@Autowired
 	PushChuckJokeService notificationsService;
- 
+
 	@RequestMapping(value = "/send", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<String> send() throws JSONException {
- 
+
+		String fcmToken = "c0HTEF0fPfU:APA91bEI4Drztmj35LXMryxlf4FTxb8l5KT2KA50qVQZOaRIHhwX6Afo9jKyMOvLeINcZjaRcGz3GXpNqzkUPXYF6VF5mwofdSmOatfvDxGNpyNRVM-qemEiSTqKJjeEIgkri0vrACLb";
+
 		JSONObject body = new JSONObject();
-		body.put("to", "/topics/" + TOPIC);
+		body.put("to", fcmToken);
 		body.put("priority", "high");
- 
+
 		JSONObject notification = new JSONObject();
 		notification.put("title", "JSA Notification");
 		notification.put("body", "Happy Message!");
-		
+
 		JSONObject data = new JSONObject();
 		data.put("Key-1", "JSA Data 1");
 		data.put("Key-2", "JSA Data 2");
- 
+
 		body.put("notification", notification);
 		body.put("data", data);
- 
-/**
-		{
-		   "notification": {
-		      "title": "JSA Notification",
-		      "body": "Happy Message!"
-		   },
-		   "data": {
-		      "Key-1": "JSA Data 1",
-		      "Key-2": "JSA Data 2"
-		   },
-		   "to": "/topics/JavaSampleApproach",
-		   "priority": "high"
-		}
-*/
- 
+
+		/**
+		 * { "notification": { "title": "JSA Notification", "body": "Happy Message!" },
+		 * "data": { "Key-1": "JSA Data 1", "Key-2": "JSA Data 2" }, "to":
+		 * "/topics/JavaSampleApproach", "priority": "high" }
+		 */
+
 		HttpEntity<String> request = new HttpEntity<>(body.toString());
- 
+
 		CompletableFuture<String> pushNotification = notificationsService.send(request);
 		CompletableFuture.allOf(pushNotification).join();
- 
+
 		try {
 			String firebaseResponse = pushNotification.get();
-			
+
 			return new ResponseEntity<>(firebaseResponse, HttpStatus.OK);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		} catch (ExecutionException e) {
 			e.printStackTrace();
 		}
- 
+
 		return new ResponseEntity<>("Push Notification ERROR!", HttpStatus.BAD_REQUEST);
 	}
-	
+
 }
