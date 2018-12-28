@@ -25,7 +25,7 @@ public class WebController {
 	@RequestMapping(value = "/send", method = RequestMethod.GET, produces = "application/json")
 	public ResponseEntity<String> send() throws JSONException {
 
-		String fcmToken = "c0HTEF0fPfU:APA91bEI4Drztmj35LXMryxlf4FTxb8l5KT2KA50qVQZOaRIHhwX6Afo9jKyMOvLeINcZjaRcGz3GXpNqzkUPXYF6VF5mwofdSmOatfvDxGNpyNRVM-qemEiSTqKJjeEIgkri0vrACLb";
+		String fcmToken = "client-token";
 
 		JSONObject body = new JSONObject();
 		body.put("to", fcmToken);
